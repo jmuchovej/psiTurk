@@ -12,7 +12,7 @@ import re
 import json
 from jinja2 import TemplateNotFound
 from collections import Counter
-
+from markdown import markdown
 
 # Setup flask
 from flask import Flask, render_template, render_template_string, request, \
@@ -411,12 +411,20 @@ def give_consent():
     with open('templates/consent.html', 'r') as temp_file:
         consent_string = temp_file.read()
     consent_string = insert_mode(consent_string)
+    
+    try:
+        with open('static/consent.md', 'r') as temp_file:
+            consent = markdown(temp_file.read())
+    except:
+        consent = ""
+    
     return render_template_string(
         consent_string,
         mode=mode,
         hitid=hit_id,
         assignmentid=assignment_id,
-        workerid=worker_id
+        workerid=worker_id,
+        consent=consent,
     )
 
 
